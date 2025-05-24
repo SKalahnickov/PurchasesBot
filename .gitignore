@@ -14,10 +14,6 @@ obj/
 *.userosscache
 *.sln.docstates
 
-# Конфигурационные файлы
-appsettings.*.json
-PurchasesBot/appsettings.json
-
 # Логи
 *.log
 
