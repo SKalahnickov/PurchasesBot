@@ -2,9 +2,11 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавляем сервисы
-builder.Services.AddSingleton<PurchasesBotService>();
+// Регистрируем PurchasesBotService как scoped сервис IPurchasesBotService
 builder.Services.AddScoped<IPurchasesBotService, PurchasesBotService>();
+
+// Регистрируем TokenHolder как singleton
+builder.Services.AddSingleton<ITokenHolder, TokenHolder>();
 
 var app = builder.Build();
 
@@ -17,12 +19,16 @@ if (string.IsNullOrWhiteSpace(botToken))
     return;
 }
 
+// Заполняем TokenHolder
+var tokenHolder = app.Services.GetRequiredService<ITokenHolder>();
+tokenHolder.Token = botToken;
+
 // Запускаем сервис бота
 var botService = app.Services.GetRequiredService<IPurchasesBotService>();
-botService.Start();
+botService?.Start();
 
 app.MapGet("/", () => "PurchasesBot is running!");
 
-app.Lifetime.ApplicationStopping.Register(() => botService.Stop());
+app.Lifetime.ApplicationStopping.Register(() => botService?.Stop());
 
 app.Run();

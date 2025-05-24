@@ -10,19 +10,23 @@ namespace PurchasesBot
 {
     public class PurchasesBotService : IPurchasesBotService
     {
-        private readonly TelegramBotClient _botClient;
+        private readonly ITokenHolder _tokenHolder;
+        private TelegramBotClient? _botClient;
         private readonly ConcurrentDictionary<long, UserFormState> _userStates = new();
         private readonly ReceiverOptions _receiverOptions = new() { AllowedUpdates = Array.Empty<UpdateType>() };
         private CancellationTokenSource? _cts;
 
-        public PurchasesBotService(string botToken)
+        public PurchasesBotService(ITokenHolder tokenHolder)
         {
-            _botClient = new TelegramBotClient(botToken);
+            _tokenHolder = tokenHolder;
         }
 
         public void Start()
         {
             _cts = new CancellationTokenSource();
+            if (string.IsNullOrWhiteSpace(_tokenHolder.Token))
+                throw new InvalidOperationException("TokenHolder.Token не задан!");
+            _botClient = new TelegramBotClient(_tokenHolder.Token);
             _botClient.StartReceiving(HandleUpdateAsync, HandlePollingErrorAsync, _receiverOptions, _cts.Token);
         }
 
