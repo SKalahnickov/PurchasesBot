@@ -295,7 +295,8 @@ botClient.StartReceiving(
 );
 
 Console.WriteLine("Бот запущен. Нажмите Enter для выхода.");
-Console.ReadLine();
+
+cts.Token.WaitHandle.WaitOne();
 
 cts.Cancel();
 
