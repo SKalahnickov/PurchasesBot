@@ -14,9 +14,10 @@ Console.WriteLine("Hello, World!");
 var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false)
+    .AddEnvironmentVariables()
     .Build();
 
-var botToken = config["BotConfiguration:TelegramToken"];
+var botToken = config["BotConfiguration:TelegramToken"] ?? Environment.GetEnvironmentVariable("TELEGRAM_TOKEN");
 if (string.IsNullOrWhiteSpace(botToken))
 {
     Console.WriteLine("Ошибка: не задан токен Telegram-бота в appsettings.json или переменных окружения.");
