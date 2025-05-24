@@ -257,23 +257,22 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
                 resultMsg += $"\n📝 <b>Комментарий:</b> <i>{state.Comment}</i>";
             }
             // Тэги для поиска
-            // Для хэштега раздела и названия берём только буквы и приводим к нижнему регистру
             var sectionTag = new string((state.Section ?? "").Where(char.IsLetter).ToArray()).ToLower();
             var nameTag = string.Join("_", (state.Name ?? "").Split(' ').Select(w => new string(w.Where(char.IsLetter).ToArray()).ToLower()).Where(s => !string.IsNullOrWhiteSpace(s)));
             var tags = $"\n\n#находка #{sectionTag} #оценка_{(state.Rating == "Прекрасно" ? "прекрасно" : "ужасно")}";
             if (!string.IsNullOrWhiteSpace(nameTag))
                 tags += $" #{nameTag}";
             resultMsg += tags;
-            await botClient.SendMessage(
-                chatId: chatId,
-                text: resultMsg,
-                replyMarkup: new ReplyKeyboardRemove(),
-                parseMode: Telegram.Bot.Types.Enums.ParseMode.Html,
-                cancellationToken: cancellationToken
-            );
+
+            // Формируем альбом: у первого фото будет описание, у остальных пустая подпись
+            var media = state.PhotoFileIds.Select((fileId, idx) =>
+                idx == 0
+                    ? new InputMediaPhoto(fileId) { Caption = resultMsg, ParseMode = Telegram.Bot.Types.Enums.ParseMode.Html }
+                    : new InputMediaPhoto(fileId)
+            ).ToArray();
             await botClient.SendMediaGroup(
                 chatId: chatId,
-                state.PhotoFileIds.Select(x => new InputMediaPhoto(x)).ToArray(),
+                media,
                 cancellationToken: cancellationToken
             );
             userStates.TryRemove(chatId, out _);
