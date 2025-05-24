@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Добавляем сервисы
 builder.Services.AddSingleton<PurchasesBotService>();
+builder.Services.AddScoped<IPurchasesBotService, PurchasesBotService>();
 
 var app = builder.Build();
 
@@ -17,7 +18,7 @@ if (string.IsNullOrWhiteSpace(botToken))
 }
 
 // Запускаем сервис бота
-var botService = app.Services.GetRequiredService<PurchasesBotService>();
+var botService = app.Services.GetRequiredService<IPurchasesBotService>();
 botService.Start();
 
 app.MapGet("/", () => "PurchasesBot is running!");

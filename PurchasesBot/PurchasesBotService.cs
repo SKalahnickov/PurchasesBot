@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 
 namespace PurchasesBot
 {
-    public class PurchasesBotService
+    public class PurchasesBotService : IPurchasesBotService
     {
         private readonly TelegramBotClient _botClient;
         private readonly ConcurrentDictionary<long, UserFormState> _userStates = new();
