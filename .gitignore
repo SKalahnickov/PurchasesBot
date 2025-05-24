@@ -1,0 +1,60 @@
+# .gitignore для C# / .NET проекта
+# Сборочные каталоги
+bin/
+obj/
+
+# Rider
+.idea/
+*.sln.iml
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Конфигурационные файлы
+appsettings.*.json
+
+# Логи
+*.log
+
+# Системные файлы
+Thumbs.db
+Desktop.ini
+
+# Пакеты NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Файлы тестов
+TestResults/
+
+# Файлы отладки
+*.pdb
+*.mdb
+*.opendb
+
+# Другие IDE
+*.swp
+*.bak
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Mac
+.DS_Store
+
+# Windows
+$RECYCLE.BIN/
+
