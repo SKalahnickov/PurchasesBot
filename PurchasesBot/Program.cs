@@ -6,10 +6,25 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using System.Collections.Concurrent;
+using Microsoft.Extensions.Configuration;
 
 Console.WriteLine("Hello, World!");
+
+// Загрузка конфигурации
+var config = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false)
+    .Build();
+
+var botToken = config["BotConfiguration:TelegramToken"];
+if (string.IsNullOrWhiteSpace(botToken))
+{
+    Console.WriteLine("Ошибка: не задан токен Telegram-бота в appsettings.json или переменных окружения.");
+    return;
+}
+
 // PurchasesManagerBrasilBot
-var botClient = new TelegramBotClient("7500348707:AAElWCtrzYnQ8mxs5MaRtBnasELrp8RLjXo");
+var botClient = new TelegramBotClient(botToken);
 
 // Хранилище состояний пользователей
 var userStates = new ConcurrentDictionary<long, UserFormState>();
